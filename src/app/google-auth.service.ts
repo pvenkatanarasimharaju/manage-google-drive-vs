@@ -1,11 +1,12 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environment/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class GoogleAuthService {
-    private clientId = '1099306377307-mr40lb1vi6t70cbl9784s27k7havge62.apps.googleusercontent.com';
+    private clientId = environment.clientId;
     private redirectUri = 'http://localhost:4200/auth';
     private scope = 'https://www.googleapis.com/auth/drive';
     private driveApiUrl = 'https://www.googleapis.com/drive/v3/files';
