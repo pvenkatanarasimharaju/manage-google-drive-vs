@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { GoogleAuthService } from './google-auth.service';
 
+import { GoogleAuthService } from './google-auth.service';
 
 @Component({
     selector: 'app-root',
@@ -19,6 +19,12 @@ export class AppComponent implements OnInit {
     ngOnInit() {
         this.accessToken = this.authService.getAccessTokenFromUrl();
         if (this.accessToken) {
+            this.getFiles();
+        }
+    }
+
+    getFiles() {
+        if (this.accessToken) {
             this.authService.getDriveFiles(this.accessToken).subscribe((response: any) => {
                 this.files = response.files;
                 console.log(this.files);
@@ -35,6 +41,7 @@ export class AppComponent implements OnInit {
             this.authService.uploadFile(this.accessToken, this.selectedFile).subscribe(response => {
                 this.uploadResponse = response;
                 console.log('File uploaded:', response);
+                this.getFiles();
             }, error => {
                 console.error('Upload error:', error);
             });
@@ -60,6 +67,7 @@ export class AppComponent implements OnInit {
         if (this.accessToken) {
             this.authService.revokeAccessToken(this.accessToken).subscribe(() => {
                 this.accessToken = null;
+                this.files = [];
                 console.log('Access token revoked');
                 localStorage.removeItem('access_token');
             });
