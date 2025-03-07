@@ -27,7 +27,6 @@ export class AppComponent implements OnInit {
         if (this.accessToken) {
             this.authService.getDriveFiles(this.accessToken).subscribe((response: any) => {
                 this.files = response.files;
-                console.log(this.files);
             });
         }
     }
@@ -68,6 +67,7 @@ export class AppComponent implements OnInit {
             this.authService.revokeAccessToken(this.accessToken).subscribe(() => {
                 this.accessToken = null;
                 this.files = [];
+                window.location.hash = '';
                 console.log('Access token revoked');
                 localStorage.removeItem('access_token');
             });
