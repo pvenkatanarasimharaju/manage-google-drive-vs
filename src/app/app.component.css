@@ -14,7 +14,6 @@ body {
 
 button {
     width: auto;
-    margin-top: 10px;
 }
 
 button:first-child {
@@ -33,6 +32,10 @@ button:nth-child(2) {
 
 button:nth-child(2):hover {
     background-color: #c82333;
+}
+
+p {
+    margin: 0;
 }
 
 h2 {
