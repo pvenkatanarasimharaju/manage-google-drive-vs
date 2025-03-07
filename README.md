@@ -1,27 +1,93 @@
-# Drive
+# Google Drive Integration with Angular
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.0.
+This Angular project integrates Google Drive API for **authentication, file upload, listing, deletion, and access revocation** using OAuth 2.0.
 
-## Development server
+## 🚀 Features
+- Google OAuth 2.0 Authentication
+- Upload Files to Google Drive
+- List Files from Google Drive
+- Delete Files from Google Drive
+- Revoke Google Access Token
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## 📌 Prerequisites
+1. **Login to Google cloud console** in [Google Cloud Console](https://console.cloud.google.com/)
+	- Create a new project
+2. **Enable Google Drive API** in [Google Cloud Console](https://console.cloud.google.com/)
+	- Click on the nav and select APIs and services
+	- Click on Enable APIs and services and search for google drive api and enable it
 
-## Code scaffolding
+3. **Create API** in [Google Cloud Console](https://console.cloud.google.com/)
+	- Click on credentials and create an API
+	
+4. **Create OAuth 2.0 Credentials** → Web Application
+   - **Authorized Redirect URI:** `http://localhost:4200/auth-callback`
+   - Save **Client ID & Secret**
+5. **Install Angular & Dependencies**
+   ```bash
+   npm install -g @angular/cli
+   git clone <your-repo-url>
+   cd google-drive-angular
+   npm install
+   ```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## 🔐 Authentication Setup
+Extract OAuth **access token** in Angular:
+```typescript
+getAccessTokenFromUrl(): string | null {
+  const params = new URLSearchParams(window.location.hash.substring(1));
+  return params.get('access_token');
+}
+```
 
-## Build
+## 📂 File Operations
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### **Upload File**
+```typescript
+uploadFile(accessToken: string, file: File) {
+  const metadata = { name: file.name, mimeType: file.type };
+  const formData = new FormData();
+  formData.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+  formData.append('file', file);
 
-## Running unit tests
+  const headers = new HttpHeaders({ Authorization: `Bearer ${accessToken}` });
+  return this.http.post('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', formData, { headers });
+}
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### **List Files**
+```typescript
+getDriveFiles(accessToken: string) {
+  const headers = new HttpHeaders({ Authorization: `Bearer ${accessToken}` });
+  return this.http.get('https://www.googleapis.com/drive/v3/files', { headers });
+}
+```
 
-## Running end-to-end tests
+### **Delete File**
+```typescript
+deleteFile(accessToken: string, fileId: string) {
+  const headers = new HttpHeaders({ Authorization: `Bearer ${accessToken}` });
+  return this.http.delete(`https://www.googleapis.com/drive/v3/files/${fileId}`, { headers });
+}
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+### **Revoke Access Token**
+```typescript
+revokeAccessToken(accessToken: string) {
+  const params = new HttpParams().set('token', accessToken);
+  return this.http.post('https://accounts.google.com/o/oauth2/revoke', null, { params });
+}
+```
 
-## Further help
+## 🚀 Run the Application
+```bash
+ng serve
+```
+Open: `http://localhost:4200/`
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## 🎯 Summary
+✅ Google OAuth 2.0 Authentication  
+✅ Upload, List, and Delete Files  
+✅ Revoke Access Token  
+
+Let me know if you have any issues! 🚀
+
