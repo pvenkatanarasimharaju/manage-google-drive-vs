@@ -1,31 +1,40 @@
 <div [ngClass]="accessToken ? 'container' : 'mt-5'">
+    <!-- Login/Logout Section -->
     <div class="text-center">
-        <button class="btn btn-primary mx-2" (click)="login()">Login with Google</button>
-        <button class="btn btn-danger" (click)="logout()">Logout & Revoke Access</button>
+        <button class="btn btn-primary m-2" (click)="login()" aria-label="Login with Google">Login with Google</button>
+        <button class="btn btn-danger m-2" (click)="logout()" aria-label="Logout & Revoke Access">Logout & Revoke Access</button>
     </div>
+
+    <!-- Access Token Display -->
     <div *ngIf="accessToken" class="alert alert-info mt-3">
         <strong>Access Token:</strong>
-        <p class="word-break">{{ accessToken }}</p>
+        <p class="text-break">{{ accessToken }}</p>
     </div>
+
+    <!-- File List Section -->
     <div *ngIf="files.length > 0">
-        <h2>Google Drive Files</h2>
-        <ul class="list-group">
+        <h2 class="text-center mt-3">Google Drive Files</h2>
+        <ul class="list-group mt-3">
             <li *ngFor="let file of files" class="list-group-item d-flex justify-content-between align-items-center">
-                <div>
-                    <p>{{ file.name }}</p>
-                    <p>({{ file.mimeType }})</p>
+                <div class="col-9">
+                    <p class="m-0">{{ file.name }}</p>
+                    <p class="m-0">({{ file.mimeType }})</p>
                 </div>
-                <button class="btn btn-sm btn-danger" (click)="deleteFile(file.id)">Delete</button>
+                <button class="btn btn-sm btn-danger" [disabled]="isRequestInProgress" (click)="deleteFile(file.id)" aria-label="Delete file">Delete</button>
             </li>
         </ul>
     </div>
-    <div *ngIf="accessToken">
-        <div>
-            <h2>Upload File to Google Drive</h2>
-            <input type="file" class="form-control" (change)="onFileSelected($event)">
-            <button class="btn btn-success mt-2" (click)="uploadFile()" [disabled]="!selectedFile">Upload</button>
+
+    <!-- File Upload Section -->
+    <div *ngIf="accessToken" class="mt-4">
+        <h2 class="text-center">Upload File to Google Drive</h2>
+        <div class="mt-3">
+            <input type="file" class="form-control mb-2" id="file-upload" (change)="onFileSelected($event)" aria-label="Select file to upload">
+            <button class="btn btn-success mt-2 w-100" (click)="uploadFile()" [disabled]="!selectedFile && isRequestInProgress" aria-label="Upload selected file">Upload</button>
         </div>
-        <div *ngIf="uploadResponse" class="upload-success mt-3">
+
+        <!-- Upload Success Message -->
+        <div *ngIf="uploadResponse" class="upload-success mt-3 text-center text-success">
             <h3>Upload Success!</h3>
             <p><strong>File ID:</strong> {{ uploadResponse.id }}</p>
         </div>
