@@ -13,6 +13,7 @@ export class AppComponent implements OnInit {
     files: any[] = [];
     selectedFile: File | null = null;
     uploadResponse: any = null;
+    isRequestInProgress = false;
 
     constructor(private authService: GoogleAuthService) { }
 
@@ -37,10 +38,12 @@ export class AppComponent implements OnInit {
 
     uploadFile() {
         if (this.selectedFile && this.accessToken) {
+            this.isRequestInProgress = true;
             this.authService.uploadFile(this.accessToken, this.selectedFile).subscribe(response => {
                 this.uploadResponse = response;
                 console.log('File uploaded:', response);
                 this.getFiles();
+                this.isRequestInProgress = false;
             }, error => {
                 console.error('Upload error:', error);
             });
@@ -49,9 +52,11 @@ export class AppComponent implements OnInit {
 
     deleteFile(fileId: string) {
         if (this.accessToken) {
+            this.isRequestInProgress = true;
             this.authService.deleteFile(this.accessToken, fileId).subscribe(() => {
                 console.log('File deleted:', fileId);
                 this.files = this.files.filter(file => file.id !== fileId);
+                this.isRequestInProgress = false;
             }, (error: any) => {
                 console.error('Error deleting file:', error);
             });
