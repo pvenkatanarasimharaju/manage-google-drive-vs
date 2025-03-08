@@ -8,7 +8,7 @@ import { environment } from '../environment/environment';
 })
 export class GoogleAuthService {
     private clientId = environment.clientId;
-    private redirectUri = 'http://localhost:4200/auth';
+    private redirectUri = 'https://pvenkatanarasimharaju.github.io/manage-google-drive-vs/auth';
     private scope = 'https://www.googleapis.com/auth/drive';
     private driveApiUrl = 'https://www.googleapis.com/drive/v3/files';
     private uploadUrl = 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart';
