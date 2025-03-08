@@ -1,4 +1,4 @@
-<div class="container">
+<div [ngClass]="accessToken ? 'container' : 'mt-5'">
     <div class="text-center">
         <button class="btn btn-primary mx-2" (click)="login()">Login with Google</button>
         <button class="btn btn-danger" (click)="logout()">Logout & Revoke Access</button>
@@ -12,20 +12,22 @@
         <ul class="list-group">
             <li *ngFor="let file of files" class="list-group-item d-flex justify-content-between align-items-center">
                 <div>
-                    <p>{{ file.name }}</p> 
+                    <p>{{ file.name }}</p>
                     <p>({{ file.mimeType }})</p>
                 </div>
                 <button class="btn btn-sm btn-danger" (click)="deleteFile(file.id)">Delete</button>
             </li>
         </ul>
     </div>
-    <div>
-        <h2>Upload File to Google Drive</h2>
-        <input type="file" class="form-control" (change)="onFileSelected($event)">
-        <button class="btn btn-success mt-2" (click)="uploadFile()" [disabled]="!selectedFile">Upload</button>
-    </div>
-    <div *ngIf="uploadResponse" class="upload-success mt-3">
-        <h3>Upload Success!</h3>
-        <p><strong>File ID:</strong> {{ uploadResponse.id }}</p>
+    <div *ngIf="accessToken">
+        <div>
+            <h2>Upload File to Google Drive</h2>
+            <input type="file" class="form-control" (change)="onFileSelected($event)">
+            <button class="btn btn-success mt-2" (click)="uploadFile()" [disabled]="!selectedFile">Upload</button>
+        </div>
+        <div *ngIf="uploadResponse" class="upload-success mt-3">
+            <h3>Upload Success!</h3>
+            <p><strong>File ID:</strong> {{ uploadResponse.id }}</p>
+        </div>
     </div>
 </div>
