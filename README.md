@@ -84,6 +84,16 @@ ng serve
 ```
 Open: `http://localhost:4200/`
 
+## To Deploy the Application
+Change angular.json 
+```json
+"options": { "outputPath": "docs" }
+```
+change index.html base href to reponame
+```bash
+    ng build --configuration production
+```
+
 ## 🎯 Summary
 ✅ Google OAuth 2.0 Authentication  
 ✅ Upload, List, and Delete Files  
