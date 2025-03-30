@@ -13,7 +13,8 @@ export class AppComponent implements OnInit {
     files: any[] = [];
     selectedFile: File | null = null;
     uploadResponse: any = null;
-    isRequestInProgress = false;
+    isRequestInProgress: boolean = false;
+    showAccessToken: boolean = false;
 
     constructor(private authService: GoogleAuthService) { }
 
@@ -41,9 +42,10 @@ export class AppComponent implements OnInit {
             this.isRequestInProgress = true;
             this.authService.uploadFile(this.accessToken, this.selectedFile).subscribe(response => {
                 this.uploadResponse = response;
-                console.log('File uploaded:', response);
                 this.getFiles();
                 this.isRequestInProgress = false;
+                this.selectedFile = null;
+                console.log('File uploaded:', response);
             }, error => {
                 console.error('Upload error:', error);
             });
@@ -59,6 +61,23 @@ export class AppComponent implements OnInit {
                 this.isRequestInProgress = false;
             }, (error: any) => {
                 console.error('Error deleting file:', error);
+            });
+        }
+    }
+
+    downloadFile(fileId: string, fileName: string) {
+        if (this.accessToken) {
+            this.isRequestInProgress = true;
+            this.authService.downloadFile(this.accessToken, fileId).subscribe((blob) => {
+                this.isRequestInProgress = false;
+
+                //saving file using blob
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = fileName;
+                link.click();
+                window.URL.revokeObjectURL(url);
             });
         }
     }

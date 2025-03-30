@@ -60,4 +60,12 @@ export class GoogleAuthService {
 
         return this.http.delete(`${this.driveApiUrl}/${fileId}`, { headers });
     }
+
+    downloadFile(accessToken: string, fileId: string) {
+        const headers = new HttpHeaders({
+            Authorization: `Bearer ${accessToken}`
+        });
+
+        return this.http.get(`${this.driveApiUrl}/${fileId}?alt=media`, { headers, responseType: 'blob' });
+    }
 }
