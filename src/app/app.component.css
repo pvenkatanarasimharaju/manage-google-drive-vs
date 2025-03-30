@@ -4,10 +4,14 @@ body {
 }
 
 .container {
-    max-width: 600px;
-    margin: 50px auto;
+    max-width: max(400px, 50%);
+    margin: 20px auto;
     padding: 20px;
     background: white;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.cursor-pointer {
+    cursor: pointer;
 }
