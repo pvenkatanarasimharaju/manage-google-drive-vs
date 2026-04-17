@@ -84,15 +84,24 @@ ng serve
 ```
 Open: `http://localhost:4200/`
 
-## To Deploy the Application
-Change angular.json 
-```json
-"options": { "outputPath": "docs" }
-```
-change index.html base href to reponame
+## To Deploy the Application (GitHub Pages)
+
+The project is already set up to publish from the `docs/` folder:
+
+- **`angular.json`** — `build.options.outputPath` is `docs`. The **production** configuration sets `baseHref` to `/manage-google-drive-vs/` (your repo name on GitHub Pages).
+- **`src/index.html`** — uses `<base href="/">` so `ng serve` works locally. Production builds rewrite the base href via Angular CLI, so you do not edit `index.html` by hand for each deploy.
+
+Build the static site and commit the `docs/` output:
+
 ```bash
-    ng build --configuration production
+npm run build:gh-pages
 ```
+
+That runs `ng build --configuration production --output-path=docs --base-href=/manage-google-drive-vs/`. Then push the updated `docs/` folder to `master` (or your default branch).
+
+In the GitHub repo: **Settings → Pages → Build and deployment → Source**: deploy from the **`/docs`** folder on your branch.
+
+If you rename the repository, update **`baseHref`** in `angular.json` (production), the **`build:gh-pages`** script in `package.json`, and your **Google OAuth authorized redirect URIs** so they match the new Pages URL.
 
 ## 🎯 Summary
 ✅ Google OAuth 2.0 Authentication  
