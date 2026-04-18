@@ -1,0 +1,126 @@
+.drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 2rem 1rem;
+  text-align: center;
+  transition: all var(--transition);
+  cursor: pointer;
+  background: #fafbfc;
+}
+
+.drop-zone:hover {
+  border-color: #b0bec5;
+  background: #f5f7fa;
+}
+
+.drop-zone.drag-over {
+  border-color: var(--brand);
+  background: var(--brand-light);
+}
+
+.drop-zone i {
+  font-size: 2.5rem;
+  color: #b0bec5;
+  transition: color var(--transition);
+}
+
+.drop-zone.drag-over i {
+  color: var(--brand);
+}
+
+.drop-zone p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0.6rem 0 0;
+}
+
+/* Align file control + upload button (same height, no misaligned glow). */
+.file-input-row {
+  align-items: stretch;
+}
+
+.file-input-row .file-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 42px;
+  padding: 0.35rem 0.85rem 0.35rem 0.35rem;
+  line-height: 1.45;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  background-color: var(--surface);
+}
+
+/* Space + polish between "Choose file" and filename / "No file chosen" (Chromium / Safari). */
+.file-input-row .file-input::-webkit-file-upload-button {
+  margin-right: 0.85rem;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #f1f3f4;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.file-input-row .file-input::file-selector-button {
+  margin-right: 0.85rem;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #f1f3f4;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.file-input-row .file-input:hover::-webkit-file-upload-button,
+.file-input-row .file-input:hover::file-selector-button {
+  background: #e8eaed;
+  border-color: #bdc1c6;
+}
+
+.file-input-row .btn-upload {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0.45rem 1.1rem;
+  flex-shrink: 0;
+}
+
+.file-input-row .file-input:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 1px rgba(66, 133, 244, 0.45);
+  outline: none;
+}
+
+.file-input-row .btn-upload:focus-visible {
+  box-shadow: 0 0 0 2px rgba(52, 168, 83, 0.4);
+  outline: none;
+}
+
+.btn-upload {
+  background: var(--green);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  transition: all var(--transition);
+}
+
+.btn-upload:hover:not(:disabled) {
+  background: var(--green-dark);
+  color: #fff;
+}
+
+.btn-upload:disabled {
+  opacity: 0.55;
+  color: #fff;
+  background: var(--green);
+}
+
+.selected-info {
+  font-size: 0.8rem;
+}
+

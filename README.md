@@ -10,34 +10,71 @@ This Angular project integrates Google Drive API for **authentication, file uplo
 - Revoke Google Access Token
 
 ## 📌 Prerequisites
-1. **Login to Google cloud console** in [Google Cloud Console](https://console.cloud.google.com/)
-	- Create a new project
-2. **Enable Google Drive API** in [Google Cloud Console](https://console.cloud.google.com/)
-	- Click on the nav and select APIs and services
-	- Click on Enable APIs and services and search for google drive api and enable it
 
-3. **Create API** in [Google Cloud Console](https://console.cloud.google.com/)
-	- Click on credentials and create an API
-	
-4. **Create OAuth 2.0 Credentials** → Web Application
-   - **Authorized Redirect URI:** `http://localhost:4200/auth-callback`
-   - Save **Client ID & Secret**
-5. **Install Angular & Dependencies**
-   ```bash
-   npm install -g @angular/cli
-   git clone <your-repo-url>
-   cd google-drive-angular
-   npm install
-   ```
+### 1. Create a Google Cloud Project
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Click the project dropdown (top-left) → **New Project**
+3. Give it a name (e.g. "Drive Manager") and click **Create**
+4. Make sure the new project is selected in the dropdown
 
-## 🔐 Authentication Setup
-Extract OAuth **access token** in Angular:
-```typescript
-getAccessTokenFromUrl(): string | null {
-  const params = new URLSearchParams(window.location.hash.substring(1));
-  return params.get('access_token');
-}
+### 2. Enable Google Drive API
+
+The Drive API must be enabled for your Google Cloud project. If it is not, API calls fail with errors such as `SERVICE_DISABLED` or *"Google Drive API has not been used in project … before or it is disabled"*.
+
+1. **Select your project** — At the top of [Google Cloud Console](https://console.cloud.google.com/), open the **project dropdown** and select the project you use for this app (the same project where your OAuth client lives).  
+2. **Open the Library** — In the left menu, go to **APIs & Services → Library**.
+3. **Search for the API** — In the search bar, type **Google Drive API** and select it from the results.
+4. **Enable the API** — On the Google Drive API page, click **Enable**.
+5. **Propagation** — If you enabled the API just now, wait a few minutes before retrying the app so the change can propagate.
+
+### 3. Configure OAuth Consent Screen
+1. Go to **APIs & Services → OAuth consent screen**
+2. Choose **External** and click **Create**
+3. Fill in the required fields (App name, User support email, Developer email)
+4. Click **Save and Continue** through the remaining steps
+5. Under **Test users**, add your Google account email so you can log in during development
+
+### 4. Create OAuth 2.0 Client ID
+1. Go to **APIs & Services → Credentials**
+2. Click **+ Create Credentials → OAuth client ID**
+3. Application type: **Web application**
+4. Name: anything (e.g. "Drive Manager Web")
+5. Under **Authorized redirect URIs**, add every URL where the app will run:
+
+   | Environment | Redirect URI |
+   |---|---|
+   | Local dev | `http://localhost:4200/` |
+   | GitHub Pages | `https://<username>.github.io/<repo-name>/` |
+
+   > The app uses `window.location.origin + window.location.pathname` as the redirect URI, so it must match exactly (including the trailing `/`).
+
+6. Click **Create**
+7. Copy the **Client ID** (looks like `123456789-abc.apps.googleusercontent.com`) and the **Client secret** (used by this app for the authorization-code flow and refresh tokens).
+
+### 5. Install Angular & Dependencies
+```bash
+npm install -g @angular/cli
+git clone https://github.com/pvenkatanarasimharaju/manage-google-drive-vs.git
+cd manage-google-drive-vs
+npm install
 ```
+
+### 6. Configure environment
+Create `src/environment/environment.ts` (keep this file out of version control if it contains secrets) and set your **Client ID** and **Client secret**:
+
+```typescript
+export const environment = {
+  production: false,
+  clientId: 'YOUR_CLIENT_ID.apps.googleusercontent.com',
+  clientSecret: 'YOUR_CLIENT_SECRET'
+};
+```
+
+> **Security:** A client secret in a browser-built app can be extracted by anyone. Use it only for personal or local development, or replace this with a small backend that exchanges the auth code for tokens.
+
+## 🔐 Authentication setup
+
+The app uses the **OAuth 2.0 authorization code flow with PKCE**, `access_type=offline`, and a **refresh token** stored in `localStorage`. After the first consent, access tokens are renewed without sending you through the full Google sign-in screen each hour. The redirect returns a `code` query parameter, which the app exchanges for tokens at `https://oauth2.googleapis.com/token`.
 
 ## 📂 File Operations
 
@@ -70,11 +107,11 @@ deleteFile(accessToken: string, fileId: string) {
 }
 ```
 
-### **Revoke Access Token**
+### **Revoke access token**
 ```typescript
 revokeAccessToken(accessToken: string) {
   const params = new HttpParams().set('token', accessToken);
-  return this.http.post('https://accounts.google.com/o/oauth2/revoke', null, { params });
+  return this.http.post('https://oauth2.googleapis.com/revoke', null, { params });
 }
 ```
 
@@ -104,9 +141,10 @@ In the GitHub repo: **Settings → Pages → Build and deployment → Source**: 
 If you rename the repository, update **`baseHref`** in `angular.json` (production), the **`build:gh-pages`** script in `package.json`, and your **Google OAuth authorized redirect URIs** so they match the new Pages URL.
 
 ## 🎯 Summary
-✅ Google OAuth 2.0 Authentication  
-✅ Upload, List, and Delete Files  
-✅ Revoke Access Token  
+✅ Enable **Google Drive API** on your Cloud project (see [step 2](#2-enable-google-drive-api))  
+✅ Google OAuth 2.0 (authorization code + PKCE, refresh tokens)  
+✅ Upload, list, and delete files  
+✅ Revoke access on logout  
 
 Let me know if you have any issues! 🚀
 

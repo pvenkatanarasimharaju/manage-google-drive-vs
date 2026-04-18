@@ -1,0 +1,11 @@
+<div class="token-bar">
+  <span class="label">
+    <i class="bi bi-key-fill"></i>Access Token
+  </span>
+  <button class="btn btn-sm btn-outline-secondary toggle-btn" (click)="showToken = !showToken">
+    <i class="bi" [ngClass]="showToken ? 'bi-eye-slash' : 'bi-eye'"></i>
+  </button>
+</div>
+<div *ngIf="showToken" class="token-reveal">
+  <code>{{ accessToken }}</code>
+</div>

@@ -1,0 +1,45 @@
+<!-- Alerts -->
+<div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+  <i class="bi bi-check-circle-fill me-2"></i>{{ successMessage }}
+  <button type="button" class="btn-close" (click)="successMessage = ''"></button>
+</div>
+
+<div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+  <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMessage }}
+  <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
+</div>
+
+<!-- Token -->
+<app-token-bar [accessToken]="accessToken"></app-token-bar>
+
+<!-- Upload -->
+<div class="mb-4">
+  <app-upload-card
+    (uploaded)="onFileUploaded($event)"
+    (uploadError)="onUploadError($event)">
+  </app-upload-card>
+</div>
+
+<!-- File list -->
+<div class="mb-4">
+  <app-file-list
+    [files]="files"
+    [isLoading]="isLoading"
+    (refresh)="loadFiles()"
+    (preview)="onPreview($event)"
+    (download)="onDownload($event)"
+    (delete)="onDelete($event)">
+  </app-file-list>
+</div>
+
+<!-- Modals -->
+<app-delete-modal
+  [file]="fileToDelete"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()">
+</app-delete-modal>
+
+<app-preview-modal
+  [file]="fileToPreview"
+  (closed)="closePreview()">
+</app-preview-modal>

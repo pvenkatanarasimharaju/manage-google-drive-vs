@@ -1,0 +1,47 @@
+<div class="card">
+  <div class="card-header">
+    <i class="bi bi-cloud-arrow-up me-2"></i>Upload File
+  </div>
+  <div class="card-body" style="padding: 1rem 1.15rem 0.5rem;">
+    <div
+      class="drop-zone mb-2"
+      [class.drag-over]="isDragOver"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)"
+    >
+      <i class="bi bi-cloud-upload d-block"></i>
+      <p>Drag &amp; drop a file here, or use the button below</p>
+    </div>
+
+    <div class="input-group file-input-row">
+      <input
+        #fileInput
+        type="file"
+        class="border file-input"
+        (change)="onFileSelected($event)"
+      >
+      <button
+        type="button"
+        class="btn btn-upload"
+        [disabled]="!selectedFile || isUploading"
+        (click)="upload()"
+      >
+        <span *ngIf="isUploading" class="spinner-border spinner-border-sm me-1"></span>
+        {{ isUploading ? 'Uploading…' : 'Upload' }}
+      </button>
+    </div>
+
+    <div *ngIf="isUploading" class="progress mt-3" style="height: 5px;">
+      <div
+        class="progress-bar progress-bar-striped progress-bar-animated"
+        role="progressbar"
+        [style.width.%]="uploadProgress"
+      ></div>
+    </div>
+
+    <small *ngIf="selectedFile" class="text-muted mt-2 d-block selected-info">
+      Selected: {{ selectedFile.name }} ({{ formatSize('' + selectedFile.size) }})
+    </small>
+  </div>
+</div>

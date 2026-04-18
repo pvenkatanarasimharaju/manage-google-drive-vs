@@ -1,17 +1,12 @@
-body {
-    background-color: #f8f9fa;
-    font-family: Arial, sans-serif;
-}
-
 .container {
-    max-width: max(400px, 50%);
-    margin: 20px auto;
-    padding: 20px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 760px;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
 }
 
-.cursor-pointer {
-    cursor: pointer;
+@media (max-width: 576px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }
