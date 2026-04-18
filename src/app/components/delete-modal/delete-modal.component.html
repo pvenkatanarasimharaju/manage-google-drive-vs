@@ -1,0 +1,23 @@
+<ng-container *ngIf="file">
+  <div class="modal-backdrop fade show"></div>
+  <div class="modal d-block" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirm Delete</h5>
+          <button type="button" class="btn-close" (click)="cancelled.emit()"></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to permanently delete <strong>{{ file.name }}</strong>?</p>
+          <p class="text-muted small mb-0">This cannot be undone.</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="cancelled.emit()">Cancel</button>
+          <button class="btn btn-delete" (click)="confirmed.emit()">
+            <i class="bi bi-trash me-1"></i>Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>

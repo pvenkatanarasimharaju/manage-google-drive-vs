@@ -1,0 +1,26 @@
+.modal {
+  background: rgba(0,0,0,.35);
+}
+
+.modal .modal-title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.modal .modal-body p {
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.btn-delete {
+  background: var(--red);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  transition: all var(--transition);
+}
+
+.btn-delete:hover {
+  background: var(--red-dark);
+  color: #fff;
+}

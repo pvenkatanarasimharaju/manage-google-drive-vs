@@ -1,100 +1,41 @@
 import { Component, OnInit } from '@angular/core';
-
-import { GoogleAuthService } from './google-auth.service';
+import { CommonModule } from '@angular/common';
+import { AuthService } from './services/auth.service';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { LoginComponent } from './pages/login/login.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css'],
-    standalone: false
+  selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule, NavbarComponent, LoginComponent, DashboardComponent],
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-    accessToken: string | null = null;
-    files: any[] = [];
-    selectedFile: File | null = null;
-    uploadResponse: any = null;
-    isRequestInProgress: boolean = false;
-    showAccessToken: boolean = false;
+  constructor(public auth: AuthService) {}
 
-    constructor(private authService: GoogleAuthService) { }
+  get isLoggedIn(): boolean {
+    return !!this.auth.getToken() || this.auth.hasRefreshToken();
+  }
 
-    ngOnInit() {
-        this.accessToken = this.authService.getAccessTokenFromUrl();
-        if (this.accessToken) {
-            this.getFiles();
-        }
+  async ngOnInit(): Promise<void> {
+    await this.auth.handleAuthCallback();
+
+    if (this.auth.isTokenExpired() && this.auth.hasRefreshToken()) {
+      await this.auth.refreshAccessToken();
     }
+  }
 
-    getFiles() {
-        if (this.accessToken) {
-            this.authService.getDriveFiles(this.accessToken).subscribe((response: any) => {
-                this.files = response.files;
-            });
-        }
+  logout(): void {
+    const token = this.auth.getToken();
+    if (token) {
+      this.auth.revokeAccessToken(token).subscribe({
+        next: () => this.auth.clearTokens(),
+        error: () => this.auth.clearTokens()
+      });
+    } else {
+      this.auth.clearTokens();
     }
-
-    onFileSelected(event: any) {
-        this.selectedFile = event.target.files[0];
-    }
-
-    uploadFile() {
-        if (this.selectedFile && this.accessToken) {
-            this.isRequestInProgress = true;
-            this.authService.uploadFile(this.accessToken, this.selectedFile).subscribe(response => {
-                this.uploadResponse = response;
-                this.getFiles();
-                this.isRequestInProgress = false;
-                this.selectedFile = null;
-                console.log('File uploaded:', response);
-            }, error => {
-                console.error('Upload error:', error);
-            });
-        }
-    }
-
-    deleteFile(fileId: string) {
-        if (this.accessToken) {
-            this.isRequestInProgress = true;
-            this.authService.deleteFile(this.accessToken, fileId).subscribe(() => {
-                console.log('File deleted:', fileId);
-                this.files = this.files.filter(file => file.id !== fileId);
-                this.isRequestInProgress = false;
-            }, (error: any) => {
-                console.error('Error deleting file:', error);
-            });
-        }
-    }
-
-    downloadFile(fileId: string, fileName: string) {
-        if (this.accessToken) {
-            this.isRequestInProgress = true;
-            this.authService.downloadFile(this.accessToken, fileId).subscribe((blob) => {
-                this.isRequestInProgress = false;
-
-                //saving file using blob
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = fileName;
-                link.click();
-                window.URL.revokeObjectURL(url);
-            });
-        }
-    }
-
-    login() {
-        this.authService.loginWithGoogle();
-    }
-
-    logout() {
-        if (this.accessToken) {
-            this.authService.revokeAccessToken(this.accessToken).subscribe(() => {
-                this.accessToken = null;
-                this.files = [];
-                window.location.hash = '';
-                console.log('Access token revoked');
-                localStorage.removeItem('access_token');
-            });
-        }
-    }
+  }
 }

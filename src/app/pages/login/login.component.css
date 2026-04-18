@@ -1,0 +1,50 @@
+.login-hero {
+  padding: 4rem 1rem;
+}
+
+.login-hero i.hero-icon {
+  font-size: 3.5rem;
+  color: var(--brand);
+  margin-bottom: 1rem;
+}
+
+.login-hero h2 {
+  font-size: 1.65rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.login-hero p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 1.75rem;
+}
+
+.btn-google {
+  background: var(--brand);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.65rem 1.75rem;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 2px 6px rgba(66,133,244,.35);
+  transition: all var(--transition);
+}
+
+.btn-google:hover {
+  background: var(--brand-dark);
+  box-shadow: 0 4px 12px rgba(66,133,244,.4);
+  transform: translateY(-1px);
+  color: #fff;
+}
+
+@media (max-width: 576px) {
+  .login-hero {
+    padding: 3rem 0.5rem;
+  }
+
+  .login-hero h2 {
+    font-size: 1.35rem;
+  }
+}

@@ -1,0 +1,71 @@
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <span><i class="bi bi-folder2-open me-2"></i>Your Files ({{ files.length }})</span>
+    <button class="btn btn-refresh" (click)="refresh.emit()" [disabled]="isLoading" title="Refresh">
+      <i class="bi bi-arrow-clockwise"></i>
+    </button>
+  </div>
+
+  <div *ngIf="files.length > 0" class="search-box">
+    <div class="input-group input-group-sm">
+      <span class="input-group-text"><i class="bi bi-search"></i></span>
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search files…"
+        [(ngModel)]="searchQuery"
+      >
+      <button *ngIf="searchQuery" class="btn btn-outline-secondary" (click)="searchQuery = ''">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center py-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading…</span>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && files.length === 0" class="empty-state">
+    <i class="bi bi-cloud-slash d-block"></i>
+    <p>No files yet. Upload your first file above!</p>
+  </div>
+
+  <ul *ngIf="!isLoading && filteredFiles.length > 0" class="list-group list-group-flush file-list">
+    <li *ngFor="let file of filteredFiles" class="list-group-item">
+      <div class="d-flex align-items-center gap-3">
+        <div class="file-icon">
+          <img *ngIf="file.iconLink" [src]="file.iconLink" alt="">
+          <i *ngIf="!file.iconLink" class="bi bi-file-earmark"></i>
+        </div>
+
+        <div class="flex-grow-1 min-width-0">
+          <p class="file-name text-truncate">{{ file.name }}</p>
+          <span class="file-meta">
+            {{ file.mimeType }}
+            <span *ngIf="file.size"> &middot; {{ formatSize(file.size) }}</span>
+            <span *ngIf="file.modifiedTime"> &middot; {{ formatDate(file.modifiedTime) }}</span>
+          </span>
+        </div>
+
+        <div class="file-actions d-flex gap-1 flex-shrink-0">
+          <button class="btn btn-outline-secondary" (click)="preview.emit(file)" title="Preview">
+            <i class="bi bi-eye"></i>
+          </button>
+          <button class="btn btn-outline-primary" (click)="download.emit(file)" title="Download">
+            <i class="bi bi-download"></i>
+          </button>
+          <button class="btn btn-outline-danger" (click)="delete.emit(file)" title="Delete">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </div>
+    </li>
+  </ul>
+
+  <div *ngIf="!isLoading && files.length > 0 && filteredFiles.length === 0" class="empty-state" style="padding: 2rem 1rem;">
+    <i class="bi bi-search d-block"></i>
+    <p>No files matching "{{ searchQuery }}"</p>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+.modal {
+  background: rgba(0,0,0,.35);
+}
+
+.preview-dialog {
+  max-width: 90vw;
+  width: 900px;
+  margin: 1.5rem auto;
+}
+
+.preview-content {
+  height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.preview-content .modal-header {
+  flex-shrink: 0;
+}
+
+.preview-content .modal-header .modal-title {
+  font-size: 1rem;
+  font-weight: 600;
+  max-width: calc(100% - 2rem);
+}
+
+.preview-body {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  background: #f0f0f0;
+}
+
+.preview-body iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+@media (max-width: 576px) {
+  .preview-dialog {
+    max-width: 98vw;
+    margin: 0.5rem auto;
+  }
+
+  .preview-content {
+    height: 90vh;
+  }
+}
