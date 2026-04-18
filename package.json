@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "build:gh-pages": "ng build --configuration production --output-path=docs --base-href=/manage-google-drive-vs/",
+    "build:gh-pages": "ng build --configuration production --output-path=dist --base-href=/manage-google-drive-vs/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
