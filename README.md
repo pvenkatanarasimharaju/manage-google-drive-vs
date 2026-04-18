@@ -121,24 +121,38 @@ ng serve
 ```
 Open: `http://localhost:4200/`
 
-## To Deploy the Application (GitHub Pages)
+## Deployment (GitHub Pages via GitHub Actions)
 
-The project is already set up to publish from the `docs/` folder:
+The project uses a **GitHub Actions** workflow to build and deploy automatically on every push to `master`. No build output is committed to the repo.
 
-- **`angular.json`** — `build.options.outputPath` is `docs`. The **production** configuration sets `baseHref` to `/manage-google-drive-vs/` (your repo name on GitHub Pages).
-- **`src/index.html`** — uses `<base href="/">` so `ng serve` works locally. Production builds rewrite the base href via Angular CLI, so you do not edit `index.html` by hand for each deploy.
+### How it works
 
-Build the static site and commit the `docs/` output:
+1. On push to `master`, the workflow (`.github/workflows/deploy.yml`) checks out the code.
+2. It injects your OAuth secrets (stored as **GitHub repository secrets**) into `src/environment/environment.ts`.
+3. It runs `npm ci` and `ng build --configuration production`.
+4. The built files are deployed to the `gh-pages` branch via `peaceiris/actions-gh-pages`.
+
+### Setup steps
+
+1. **Add secrets** — Go to your GitHub repo **Settings > Secrets and variables > Actions > New repository secret** and add:
+   - `GOOGLE_CLIENT_ID` — your OAuth Client ID
+   - `GOOGLE_CLIENT_SECRET` — your OAuth Client Secret
+
+2. **Configure GitHub Pages source** — In the repo **Settings > Pages > Build and deployment > Source**, select **Deploy from a branch** and choose `gh-pages` / `/ (root)`.
+
+3. **Push to `master`** — The workflow runs automatically and your app will be live at `https://<username>.github.io/manage-google-drive-vs/`.
+
+### Local build (optional)
+
+You can still build locally with:
 
 ```bash
 npm run build:gh-pages
 ```
 
-That runs `ng build --configuration production --output-path=docs --base-href=/manage-google-drive-vs/`. Then push the updated `docs/` folder to `master` (or your default branch).
+This outputs to `dist/` (gitignored). Useful for testing the production build before pushing.
 
-In the GitHub repo: **Settings → Pages → Build and deployment → Source**: deploy from the **`/docs`** folder on your branch.
-
-If you rename the repository, update **`baseHref`** in `angular.json` (production), the **`build:gh-pages`** script in `package.json`, and your **Google OAuth authorized redirect URIs** so they match the new Pages URL.
+If you rename the repository, update **`baseHref`** in `angular.json` (production config), the **`build:gh-pages`** script in `package.json`, and your **Google OAuth authorized redirect URIs** so they match the new Pages URL.
 
 ## 🎯 Summary
 ✅ Enable **Google Drive API** on your Cloud project (see [step 2](#2-enable-google-drive-api))  
